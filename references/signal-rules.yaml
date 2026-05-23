@@ -1,0 +1,109 @@
+signal_rules:
+  high_concurrency:
+    indicators:
+      - distributed locks
+      - Redis counters
+      - conditional database updates
+      - message queue peak shaving
+      - limited quota or stock
+      - repeated submit protection
+    question_angles:
+      - Why this flow can face concurrency pressure
+      - How the implementation prevents oversell or duplicate writes
+      - What can still go wrong under multi-instance deployment
+      - How to improve reliability with Lua, unique constraints, or compensation
+
+  idempotency_and_state:
+    indicators:
+      - request IDs
+      - business order numbers
+      - status conditional updates
+      - external callbacks
+      - retry handlers
+    question_angles:
+      - How duplicate requests are recognized
+      - Which state transitions are legal
+      - How repeated callbacks or messages are handled
+      - How to test concurrent or repeated transitions
+
+  cache_consistency:
+    indicators:
+      - Redis cache
+      - local cache
+      - cache deletion
+      - TTL
+      - delayed writes
+      - index synchronization
+    question_angles:
+      - Why cache is introduced
+      - Cache invalidation strategy
+      - Database/cache inconsistency windows
+      - Hot key and penetration risks
+
+  async_messaging:
+    indicators:
+      - MQ producers
+      - MQ consumers
+      - delayed messages
+      - scheduled compensation
+      - dead-letter or retry queues
+    question_angles:
+      - Why the flow is asynchronous
+      - Producer/consumer failure handling
+      - Duplicate consumption
+      - Eventual consistency and compensation
+
+  permissions_and_isolation:
+    indicators:
+      - roles
+      - permissions
+      - privileges
+      - tenants
+      - auth filters
+      - user context
+    question_angles:
+      - Permission model
+      - Data isolation
+      - Trust boundaries
+      - Privilege cache invalidation
+
+  workflow_and_publishing:
+    indicators:
+      - draft tables
+      - status transitions
+      - approval
+      - publish
+      - review
+      - audit
+    question_angles:
+      - Why draft and live data are separated
+      - How consistency is maintained during publish
+      - How rollback or re-edit works
+      - What should be audited
+
+  search_and_indexing:
+    indicators:
+      - Elasticsearch
+      - search repositories
+      - index writes
+      - highlight queries
+      - ranking or sorting
+    question_angles:
+      - Why search is separated from primary storage
+      - Index synchronization strategy
+      - Query DSL and filters
+      - Rebuild and compensation plan
+
+  data_or_ai_pipeline:
+    indicators:
+      - ETL
+      - model inference
+      - embeddings
+      - vector search
+      - scheduled metrics
+      - batch jobs
+    question_angles:
+      - Data lineage
+      - Schema/model boundaries
+      - Batch versus streaming
+      - Model latency and observability

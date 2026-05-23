@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Interview Q&A"
+  short_description: "先生成项目Wiki再产出中层场景化面试题库和追问训练"
+  default_prompt: "Use $project-interview-qa to 先基于当前项目生成项目 Wiki 理解，再结合代码画像生成中层场景化面试题库。"

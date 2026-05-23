@@ -1,0 +1,173 @@
+archetypes:
+  transactional-commerce-or-education-sales:
+    signals:
+      - order
+      - payment
+      - refund
+      - cart
+      - coupon
+      - promotion
+      - voucher
+      - inventory
+      - stock
+      - quota
+      - purchase
+      - settlement
+      - course purchase
+    interview_focus:
+      - high concurrency
+      - idempotency
+      - stock or quota deduction
+      - payment callback
+      - order state machine
+      - cache and MQ consistency
+      - compensation
+
+  learning-content-or-media-platform:
+    signals:
+      - course
+      - lesson
+      - learning
+      - progress
+      - media
+      - upload
+      - publish
+      - review
+      - comment
+      - like
+      - feed
+      - search
+    interview_focus:
+      - publishing workflow
+      - progress tracking
+      - delayed writes
+      - counters
+      - search index sync
+      - media storage
+      - content state transitions
+
+  saas-admin-or-business-workflow:
+    signals:
+      - tenant
+      - role
+      - permission
+      - privilege
+      - approval
+      - workflow
+      - audit
+      - organization
+      - report
+      - form
+    interview_focus:
+      - RBAC and ABAC
+      - tenant isolation
+      - workflow state machine
+      - auditability
+      - data permissions
+      - reporting queries
+
+  social-messaging-or-collaboration:
+    signals:
+      - message
+      - chat
+      - inbox
+      - notification
+      - push
+      - unread
+      - reply
+      - comment
+      - like
+      - follow
+      - fanout
+      - websocket
+    interview_focus:
+      - message delivery
+      - unread counters
+      - ordering
+      - deduplication
+      - fanout strategy
+      - rate limiting
+
+  data-analytics-or-ai:
+    signals:
+      - etl
+      - pipeline
+      - metric
+      - dashboard
+      - model
+      - embedding
+      - vector
+      - inference
+      - training
+      - dataset
+      - feature
+      - batch
+      - stream
+    interview_focus:
+      - data flow
+      - schema evolution
+      - batch and stream tradeoffs
+      - model serving
+      - latency
+      - observability
+      - reproducibility
+
+  infrastructure-or-developer-tool:
+    signals:
+      - plugin
+      - cli
+      - deploy
+      - monitor
+      - config
+      - automation
+      - build
+      - ci
+      - runner
+      - workspace
+      - sdk
+    interview_focus:
+      - extension boundaries
+      - config precedence
+      - failure recovery
+      - filesystem and network safety
+      - integration tests
+
+  frontend-mobile-or-product-app:
+    signals:
+      - component
+      - route
+      - store
+      - state
+      - form
+      - offline
+      - cache
+      - accessibility
+      - responsive
+      - mobile
+    interview_focus:
+      - component design
+      - state flow
+      - API caching
+      - error states
+      - performance
+      - UX edge cases
+      - testability
+
+  game-or-interactive-tool:
+    signals:
+      - game
+      - physics
+      - render
+      - canvas
+      - three
+      - input
+      - sprite
+      - animation
+      - multiplayer
+    interview_focus:
+      - game loop
+      - state consistency
+      - performance
+      - deterministic rules
+      - rendering architecture
+      - interaction design
