@@ -1,6 +1,6 @@
 # Project Interview Q&A
 
-基于当前代码仓库自动生成**项目专属技术面试题库**的 Qoder Skill。通过分析项目源码生成项目 Wiki 作为中间理解层，再结合代码画像产出中层场景化面试题，帮助候选人准备"项目八股 + 项目追问"。
+基于当前代码仓库自动生成**项目专属技术面试题库**的 Agent Skill。通过分析项目源码生成项目 Wiki 作为中间理解层，再结合代码画像产出中层场景化面试题，帮助候选人准备"项目八股 + 项目追问"。
 
 ## 核心能力
 
@@ -36,7 +36,7 @@ project-interview-qa-skills/
 
 ## 使用方式
 
-在 Qoder 中加载此 Skill 后，直接在对话中使用：
+在 Agent 中加载此 Skill 后，直接在对话中使用：
 
 ```
 # 生成面试题库
@@ -68,7 +68,7 @@ project-interview-qa-skills/
 ## 技术栈
 
 - **语言**：Python（分析脚本）、YAML（配置）、Markdown（Skill 定义）
-- **平台**：Qoder Agent Skills
+- **平台**：Agent Skills
 
 ## 许可证
 
