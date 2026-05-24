@@ -28,13 +28,61 @@ def load_profile(path: str | None) -> dict:
     if not path:
         return {}
     try:
+        profile_path = Path(path)
+        try:
+            raw = profile_path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            raw = profile_path.read_text(encoding="utf-16")
+        return json.loads(raw)
+    except Exception:
+        return {}
+
+
+def load_wiki(path: str | None) -> dict:
+    if not path:
+        return {}
+    try:
         return json.loads(Path(path).read_text(encoding="utf-8"))
     except Exception:
         return {}
 
 
-def validate(markdown: str, expected_count: int, profile: dict) -> dict:
+def split_questions(markdown: str) -> list[str]:
+    starts = [match.start() for match in QUESTION_RE.finditer(markdown)]
+    if not starts:
+        return []
+    starts.append(len(markdown))
+    return [markdown[starts[i]:starts[i + 1]] for i in range(len(starts) - 1)]
+
+
+def wiki_terms(wiki: dict) -> dict[str, list[str]]:
+    flows = wiki.get("business_flows", [])
+    modules = [module for item in wiki.get("recommended_modules", []) for module in [item.get("name", "")] if module]
+    flow_names = [flow.get("name", "") for flow in flows if flow.get("name")]
+    risks = sorted({risk for flow in flows for risk in flow.get("risk_topics", [])})
+    evidence = sorted({
+        path
+        for flow in flows
+        for path in flow.get("evidence_files", [])
+        if path
+    })
+    return {
+        "modules": modules,
+        "flow_names": flow_names,
+        "risks": risks,
+        "evidence": evidence,
+    }
+
+
+def contains_any(text: str, terms: list[str]) -> bool:
+    lowered = text.lower()
+    return any(term and term.lower() in lowered for term in terms)
+
+
+def validate(markdown: str, expected_count: int, profile: dict, wiki: dict | None = None) -> dict:
+    wiki = wiki or {}
     questions = QUESTION_RE.findall(markdown)
+    question_sections = split_questions(markdown)
     missing_labels = [label for label in REQUIRED_LABELS if label not in markdown]
     warnings = []
     errors = []
@@ -85,6 +133,41 @@ def validate(markdown: str, expected_count: int, profile: dict) -> dict:
     if detail_sections and len(too_short) > max(2, expected_count // 5):
         warnings.append("Many 标准详解版 sections look too short for detailed interview preparation.")
 
+    if wiki:
+        terms = wiki_terms(wiki)
+        focus_terms = terms["modules"] + terms["flow_names"] + terms["risks"]
+        if terms["flow_names"] and not contains_any(markdown, terms["flow_names"]):
+            warnings.append("Question bank does not visibly mention any primary business flow from wiki.json.")
+
+        focused = [
+            section for section in question_sections
+            if contains_any(section, focus_terms)
+        ]
+        if question_sections and len(focused) / len(question_sections) < 0.70:
+            warnings.append("Less than 70% of questions visibly hit wiki recommended modules, flows, or risk topics.")
+
+        project_binding_failures = []
+        binding_terms = focus_terms + terms["evidence"]
+        for index, section in enumerate(question_sections, 1):
+            match = re.search(
+                r"\*\*结合本项目：\*\*(.*?)(?:\*\*可选追问：\*\*|### Q\d+|$)",
+                section,
+                flags=re.S,
+            )
+            binding_text = match.group(1) if match else ""
+            if not contains_any(binding_text, binding_terms):
+                project_binding_failures.append(index)
+        if project_binding_failures:
+            warnings.append(
+                "Some 结合本项目 sections lack wiki module/flow/risk/evidence terms: "
+                + ", ".join(f"Q{idx}" for idx in project_binding_failures[:8])
+            )
+
+    narrow_terms = ["方法", "字段", "SQL", "条件", "参数", "返回值", "这一行", "这个类"]
+    narrow_count = sum(markdown.count(term) for term in narrow_terms)
+    if narrow_count > max(12, expected_count):
+        warnings.append("Question bank may be too code-detail-heavy; prefer flow/design/reliability questions.")
+
     return {
         "ok": not errors,
         "question_count": len(questions),
@@ -98,12 +181,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Validate a Markdown interview question bank.")
     parser.add_argument("markdown_file")
     parser.add_argument("--profile")
+    parser.add_argument("--wiki-json")
     parser.add_argument("--expected-count", type=int, default=30)
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
 
     markdown = Path(args.markdown_file).read_text(encoding="utf-8", errors="ignore")
-    result = validate(markdown, args.expected_count, load_profile(args.profile))
+    result = validate(markdown, args.expected_count, load_profile(args.profile), load_wiki(args.wiki_json))
     if args.json:
         print(json.dumps(result, ensure_ascii=False, indent=2))
     else:

@@ -7,6 +7,7 @@ Use these rubrics when turning a project profile into interview questions.
 - Ask about behavior that exists in the repository, not only about the framework.
 - Tie a common interview concept to a concrete module, class, command, route, schema, queue, cache key, or data flow.
 - Prefer risk-bearing flows over simple CRUD.
+- Prefer business-flow questions from `wiki.json.business_flows` over isolated module questions.
 - Ask questions that support follow-up discussion: tradeoffs, failure modes, optimizations, and tests.
 - Include candidate-facing wording that can be spoken in an interview.
 - Prefer medium-granularity scenario questions: module-level or flow-level questions that a candidate can explain in 1-3 minutes.
@@ -17,6 +18,7 @@ Use these rubrics when turning a project profile into interview questions.
 
 - Generic framework questions that do not mention the project.
 - Even coverage of every module when only a few modules contain real interview value.
+- Ignoring the question distribution plan and drifting into unrelated framework topics.
 - Questions based only on dependency names when no code path proves the behavior.
 - Long textbook answers that do not explain how the project implements or fails to implement the concept.
 - Overconfident claims about production readiness when the code does not show reliability features.
@@ -49,7 +51,7 @@ Avoid reciting every method call. Mention code evidence in `结合本项目`, no
 
 Use this priority:
 
-1. Business scenario question: "优惠券领取如何避免超发？"
+1. Business-flow question from the wiki: "优惠券领取如何避免超发？"
 2. Flow/design question: "课程上架为什么要拆草稿表和正式表？"
 3. Reliability/tradeoff question: "MQ 异步后如何保证最终一致？"
 4. Code-level question: only use when it represents a broader interview point.
@@ -59,7 +61,8 @@ For a 30-question bank, at least 24 questions should be scenario/design/reliabil
 ## Weighting Guidance
 
 - For 30 questions, choose 3-5 main modules or flows.
-- Put 70-80% of questions on the selected high-value modules and the cross-cutting infrastructure that supports them.
+- Put 70-80% of questions on `question_plan.primary_flows` and the cross-cutting infrastructure that supports them.
 - Use only a few questions for secondary modules.
 - If the analyzer finds hot topics, include at least 5 of the top 8 unless the evidence is weak.
 - If a module has only config or CRUD code, keep it low priority unless it supports a high-value flow.
+- Keep generic framework basics under 10% unless the user explicitly requests technical-stack basics.
